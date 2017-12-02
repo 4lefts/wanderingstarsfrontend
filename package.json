@@ -1,0 +1,25 @@
+{
+  "name": "picoplanets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack -p",
+    "dev": "webpack-dev-server -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "webpack": "^3.9.1",
+    "webpack-dev-server": "^2.9.5"
+  },
+  "dependencies": {
+    "axios": "^0.17.1",
+    "picodom": "^1.0.2"
+  }
+}
