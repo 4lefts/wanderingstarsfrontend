@@ -12,10 +12,9 @@ const getData = function(qry){
     fetch(qry)
         .then(response => response.json())
         .then(data => {
-            isLoading = false
-            render(view, data)
+            render(dataView, data)
         })
-        .catch(err => console.log(err))
+        .catch(err => render(errView, err))
 }
 
 let query = makeQuery(location)
@@ -33,6 +32,7 @@ initFormValue(location, locationForm)
 
 locationForm.addEventListener('submit', event => {
     clearInterval(dataGetter)
+    render(loadingView, null)
     location = {
         lat: event.target[0].value,
         long: event.target[1].value
@@ -45,17 +45,17 @@ locationForm.addEventListener('submit', event => {
 //--------
 //picodom rendering
 let node
-let isLoading = true
 const container = document.getElementById('data-container')
+
 const render = function(view, withState){
     patch(node, (node = view(withState)), container)
 }
-const view = state => {
+
+const loadingView = () => (h('div', {}, 'Loading...'))
+const errView = state => (h('div', {}, state))
+const dataView = state => {
     return(
-        h('div', {id: 'data-output'}, 
-        isLoading ?
-        'Loading...' :
-        [
+        h('div', {id: 'data-output'}, [
             renderBodyData(state.bodies),
             h('p', {}, 'Showing data for:'),
             renderMetaData(state.meta)
@@ -133,4 +133,4 @@ function parseDateTime(_dt){
 }
 
 //initial render
-render(view, null)
+render(loadingView, null)

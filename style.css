@@ -22,7 +22,7 @@ body{
 .container{
   max-width: 480px;
   margin: 0 auto;
-  padding: 10px;
+  padding: 0 10px;
 }
 
 h1{
@@ -34,11 +34,12 @@ form{
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
+  align-items: flex-end;
   margin: 20px 0;
 }
 
 form div{
-  width: 30%;
+  width: 34%;
   display: flex;
   flex-direction: column;
 }
@@ -49,6 +50,7 @@ label{
 
 input{
   background-color: black;
+  font-family: 'Fira Mono', monospace;
   color: firebrick;
   border: none;
   outline: none;
@@ -59,10 +61,10 @@ input{
 
 input[type="submit"]{
   border: 1px solid darkred;
-  border-radius: 3px;
   text-transform: uppercase;
   width: 75px;
   padding: 0;
+  line-height: 2em;
 }
 
 input:hover, input:active, input:focus{
