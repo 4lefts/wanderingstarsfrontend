@@ -15,13 +15,13 @@ body{
   padding: 0;
   background: black;
   font-family: 'Fira Mono', monospace;
+  color: firebrick;
   font-size: calc(6px + 1vmin);
 }
 
 .container{
   max-width: 480px;
   margin: 0 auto;
-  color: firebrick;
   padding: 10px;
 }
 
@@ -100,4 +100,8 @@ th{
 
 p{
   margin-top: 2em;
+}
+
+footer{
+  font-size: 0.8em;
 }

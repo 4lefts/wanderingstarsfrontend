@@ -5,17 +5,32 @@ let location = {
     long: -3.5
 }
 
+//--------
+//fetch data
 const makeQuery = loc => `https://4lefts.pythonanywhere.com/api/${loc.lat}/${loc.long}`
 const getData = function(qry){
     fetch(qry)
         .then(response => response.json())
-        .then(data => render(view, data))
+        .then(data => {
+            isLoading = false
+            render(view, data)
+        })
         .catch(err => console.log(err))
 }
 
 let query = makeQuery(location)
 let dataGetter = setInterval(getData, 1000, query)
+
+//--------
+//initialise and handle form
 const locationForm = document.getElementById('location-form')
+function initFormValue(loc, form){
+    const inputs = form.querySelectorAll('input')
+    inputs[0].value = loc.lat
+    inputs[1].value = loc.long
+}
+initFormValue(location, locationForm)
+
 locationForm.addEventListener('submit', event => {
     clearInterval(dataGetter)
     location = {
@@ -27,15 +42,20 @@ locationForm.addEventListener('submit', event => {
     event.preventDefault()
 })
 
-//picodom rendering 
+//--------
+//picodom rendering
 let node
+let isLoading = true
 const container = document.getElementById('data-container')
 const render = function(view, withState){
     patch(node, (node = view(withState)), container)
 }
 const view = state => {
     return(
-        h('div', {id: 'data-output'}, [
+        h('div', {id: 'data-output'}, 
+        isLoading ?
+        'Loading...' :
+        [
             renderBodyData(state.bodies),
             h('p', {}, 'Showing data for:'),
             renderMetaData(state.meta)
@@ -43,6 +63,7 @@ const view = state => {
     )
 }
 
+//--------
 //template component functions
 function renderBodyData(bs){
     return(
@@ -110,3 +131,6 @@ function parseDateTime(_dt){
     const d = dt[0].split('-').join('/')
     return `${t[0]}:${t[1]} ${d}`
 }
+
+//initial render
+render(view, null)
