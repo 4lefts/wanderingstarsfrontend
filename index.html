@@ -8,10 +8,23 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="app">
+    <div class="container">
         <h1>Wandering Stars</h1>
-        <div id="form-container"></div>
-        <div id="data-output"></div>
+    </div>
+    <div id="data-container" class="container"></div>
+    <div class="container">
+        <p>Update Location:</p>
+        <form id="location-form">
+            <div>
+                <label for="lat-input">Latitude:</label>
+                <input type="number" name="lat-input" step= 0.1>
+            </div>
+            <div>
+                <label for="long-input">Longitude:</label>
+                <input type="number" name="long-input"step= 0.1>
+            </div>
+            <input type="submit" value="Update">
+        </form>
     </div>
     <script type="text/javascript" src="app.js"></script>
 </body>

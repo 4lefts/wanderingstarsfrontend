@@ -1,73 +1,54 @@
 import {h, patch} from 'picodom'
-import {get} from 'axios'
 
-let formNode, dataNode, go
-const formContainer = document.getElementById('form-container')
-const dataContainer = document.getElementById('data-output')
 let location = {
     lat: 50.7,
     long: -3.5
 }
-const buildQuery = location => `https://4lefts.pythonanywhere.com/api/${location.lat}/${location.long}`
-let query = buildQuery(location)
-render(formNode, formView, location, formContainer)
 
-function getData(qry){
-    clearInterval(go)
-    go = setInterval(q => {
-        get(q)
-            .then(res => {
-                console.log(res.data)
-                render(dataNode, dataView, res.data, dataContainer)
-            })
-            .catch(err => console.log(err))
-    }, 1000, qry)
+const makeQuery = loc => `https://4lefts.pythonanywhere.com/api/${loc.lat}/${loc.long}`
+const getData = function(qry){
+    fetch(qry)
+        .then(response => response.json())
+        .then(data => render(view, data))
+        .catch(err => console.log(err))
 }
 
-function render(node, view, withState, container){
+let query = makeQuery(location)
+let dataGetter = setInterval(getData, 1000, query)
+const locationForm = document.getElementById('location-form')
+locationForm.addEventListener('submit', event => {
+    clearInterval(dataGetter)
+    location = {
+        lat: event.target[0].value,
+        long: event.target[1].value
+    }
+    query = makeQuery(location)
+    dataGetter = setInterval(getData, 1000, query)
+    event.preventDefault()
+})
+
+//picodom rendering 
+let node
+const container = document.getElementById('data-container')
+const render = function(view, withState){
     patch(node, (node = view(withState)), container)
 }
-
-function handleUpdate(e){
-    console.log(e)
-    location.lat = e.target[0].value
-    location.long = e.target[1].value
-    query = buildQuery(location)
-    getData(query)
-    e.preventDefault()
-}
-
-function formView(state){
+const view = state => {
     return(
-        h('form', {onsubmit: handleUpdate}, [
-            h('div', {}, [
-                h('label', {for: 'lat-input'}, 'Latitude:'),
-                h('input', {type: 'number', name: 'lat-input', value: state.lat})
-            ]),
-            h('div', {}, [
-                h('label', {for: 'long-input'}, 'Longitude:'),
-                h('input', {type: 'number', name: 'long-input', value: state.long})
-            ]),
-            h('input', {type: 'submit', value: 'update'})
-        ])
-    )
-}
-
-function dataView(state){
-    return(
-        h('div', {}, [
+        h('div', {id: 'data-output'}, [
             renderBodyData(state.bodies),
-            h('p', {}, 'Displaying data for:'),  
+            h('p', {}, 'Showing data for:'),
             renderMetaData(state.meta)
         ])
     )
 }
 
-//template components
+//template component functions
 function renderBodyData(bs){
     return(
         h('table', {}, [
             h('tr', {}, [
+                h('td', {}, ''),
                 h('td', {}, 'Alt'),
                 h('td', {}, 'Az'),
                 h('td', {}, 'Rise'),
@@ -82,6 +63,7 @@ function bodyRow(b){
     const upOrDown = b.hasOwnProperty('rise') ? 'down' : 'up'
     return(
         h('tr', {className: upOrDown}, [
+            h('td', {}, b.name),
             h('td', {}, parseAngle(b.alt)),
             h('td', {}, parseAngle(b.az)),
             h('td', {}, parseTime(b.rise) || ''),
@@ -128,5 +110,3 @@ function parseDateTime(_dt){
     const d = dt[0].split('-').join('/')
     return `${t[0]}:${t[1]} ${d}`
 }
-
-getData(query)

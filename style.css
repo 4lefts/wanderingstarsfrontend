@@ -14,11 +14,11 @@ body{
   margin: 0;
   padding: 0;
   background: black;
-}
-
-#app{
   font-family: 'Fira Mono', monospace;
   font-size: calc(6px + 1vmin);
+}
+
+.container{
   max-width: 480px;
   margin: 0 auto;
   color: firebrick;
