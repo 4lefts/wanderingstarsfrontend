@@ -1,33 +1,63 @@
 import {h, patch} from 'picodom'
 import {get} from 'axios'
 
+let formNode, dataNode, go
+const formContainer = document.getElementById('form-container')
+const dataContainer = document.getElementById('data-output')
 let location = {
     lat: 50.7,
     long: -3.5
 }
+const buildQuery = location => `https://4lefts.pythonanywhere.com/api/${location.lat}/${location.long}`
+let query = buildQuery(location)
+render(formNode, formView, location, formContainer)
 
-let query = `https://4lefts.pythonanywhere.com/api/${location.lat}/${location.long}`
-get(query)
-    .then(res => {
-        console.log(res.data)
-        render(view, res.data)
-    })
-    .catch(err => console.log(err))
+function getData(qry){
+    clearInterval(go)
+    go = setInterval(q => {
+        get(q)
+            .then(res => {
+                console.log(res.data)
+                render(dataNode, dataView, res.data, dataContainer)
+            })
+            .catch(err => console.log(err))
+    }, 1000, qry)
+}
 
-let node
-
-const container = document.getElementById('data-output')
-
-function render(view, withState){
+function render(node, view, withState, container){
     patch(node, (node = view(withState)), container)
 }
 
-function view(state){
+function handleUpdate(e){
+    console.log(e)
+    location.lat = e.target[0].value
+    location.long = e.target[1].value
+    query = buildQuery(location)
+    getData(query)
+    e.preventDefault()
+}
+
+function formView(state){
     return(
-        h('div', {id: "app"}, [
-            h('h1', {}, 'Wandering Stars'),
+        h('form', {onsubmit: handleUpdate}, [
+            h('div', {}, [
+                h('label', {for: 'lat-input'}, 'Latitude:'),
+                h('input', {type: 'number', name: 'lat-input', value: state.lat})
+            ]),
+            h('div', {}, [
+                h('label', {for: 'long-input'}, 'Longitude:'),
+                h('input', {type: 'number', name: 'long-input', value: state.long})
+            ]),
+            h('input', {type: 'submit', value: 'update'})
+        ])
+    )
+}
+
+function dataView(state){
+    return(
+        h('div', {}, [
             renderBodyData(state.bodies),
-            h('p', {}, 'Displaying data for:'),
+            h('p', {}, 'Displaying data for:'),  
             renderMetaData(state.meta)
         ])
     )
@@ -87,7 +117,6 @@ function parseAngle(_a){
 
 function parseTime(_t){
     if(_t){
-        // return _t
         const t = _t.split(' ')[1].split(':')
         return `${t[0]}:${t[1]}`
     }
@@ -99,3 +128,5 @@ function parseDateTime(_dt){
     const d = dt[0].split('-').join('/')
     return `${t[0]}:${t[1]} ${d}`
 }
+
+getData(query)
