@@ -1,59 +1,25 @@
 import {h, patch} from 'picodom'
 
-let location = {
-    lat: 50.7,
-    long: -3.5
-}
-
-//--------
-//fetch data
-const makeQuery = loc => `https://4lefts.pythonanywhere.com/api/${loc.lat}/${loc.long}`
-const getData = function(qry){
-    fetch(qry)
-        .then(response => response.json())
-        .then(data => {
-            render(dataView, data)
-        })
-        .catch(err => render(errView, err))
-}
-
-let query = makeQuery(location)
-let dataGetter = setInterval(getData, 1000, query)
-
-//--------
-//initialise and handle form
-const locationForm = document.getElementById('location-form')
-function initFormValue(loc, form){
-    const inputs = form.querySelectorAll('input')
-    inputs[0].value = loc.lat
-    inputs[1].value = loc.long
-}
-initFormValue(location, locationForm)
-
-locationForm.addEventListener('submit', event => {
-    clearInterval(dataGetter)
-    render(loadingView, null)
-    location = {
-        lat: event.target[0].value,
-        long: event.target[1].value
-    }
-    query = makeQuery(location)
-    dataGetter = setInterval(getData, 1000, query)
-    event.preventDefault()
-})
-
-//--------
 //picodom rendering
 let node
 const container = document.getElementById('data-container')
 
-const render = function(view, withState){
+export { render, loadingView, errView, dataView }
+
+//exported functions
+function render(view, withState){
     patch(node, (node = view(withState)), container)
 }
 
-const loadingView = () => (h('div', {}, 'Loading...'))
-const errView = state => (h('div', {}, state))
-const dataView = state => {
+function loadingView(state){
+    return (h('div', {}, 'Loading...'))
+}
+
+function errView(state){
+    return (h('div', {}, state))
+}
+
+function dataView(state){
     return(
         h('div', {id: 'data-output'}, [
             renderBodyData(state.bodies),
@@ -106,7 +72,7 @@ function renderMetaData(m){
             ]),
             h('tr', {}, [
                 h('td', {}, 'Local time:'),
-                h('td', {}, parseDateTime(m.localtime) + `(${m.tz})`)
+                h('td', {}, parseDateTime(m.localtime) + ` (${m.tz})`)
             ])
         ])
     )
@@ -131,6 +97,3 @@ function parseDateTime(_dt){
     const d = dt[0].split('-').join('/')
     return `${t[0]}:${t[1]} ${d}`
 }
-
-//initial render
-render(loadingView, null)

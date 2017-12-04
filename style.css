@@ -11,9 +11,11 @@ html{
 }
 
 body{
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   background: black;
+  background: linear-gradient(to bottom right, #000000, #010125);
   font-family: 'Fira Mono', monospace;
   color: firebrick;
   font-size: calc(6px + 1vmin);
@@ -49,7 +51,7 @@ label{
 }
 
 input{
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0);
   font-family: 'Fira Mono', monospace;
   color: firebrick;
   border: none;
