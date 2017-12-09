@@ -1,8 +1,8 @@
 import {render, loadingView, errView, dataView} from './renderdom.js'
 
 let location = {
-    lat: 50.7,
-    long: -3.5
+    lat: '50.7',
+    long: '-3.5'
 }
 
 //--------
@@ -10,9 +10,16 @@ let location = {
 const makeQuery = loc => `https://4lefts.pythonanywhere.com/api/${loc.lat}/${loc.long}`
 const getData = function(qry){
     fetch(qry)
-        .then(response => response.json())
+        .then(response => {
+            if(response.ok){
+                return response.json()
+            } else {
+                console.log(response)
+                render(errView, response.status)
+            }
+        })
         .then(data => {
-            render(dataView, data)
+            if(data) render(dataView, data)
         })
         .catch(err => render(errView, err))
 }

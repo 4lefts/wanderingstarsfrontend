@@ -16,7 +16,10 @@ function loadingView(state){
 }
 
 function errView(state){
-    return (h('div', {}, state))
+    console.log(state)
+    return (h('div', {}, `
+        sorry, something went wrong, please try again\nerrcode:${state}`
+    ))
 }
 
 function dataView(state){
