@@ -17,8 +17,10 @@ function loadingView(state){
 
 function errView(state){
     console.log(state)
-    return (h('div', {}, `
-        sorry, something went wrong, please try again\nerrcode:${state}`
+    return (h('div', {class: 'errorBox'}, [
+        h('h3', {}, `Error:${state}`),
+        h('p', {}, 'sorry, something went wrong, please try again')
+    ]
     ))
 }
 
@@ -52,7 +54,7 @@ function renderBodyData(bs){
 function bodyRow(b){
     const upOrDown = b.hasOwnProperty('rise') ? 'down' : 'up'
     return(
-        h('tr', {className: upOrDown}, [
+        h('tr', {class: upOrDown}, [
             h('td', {}, b.name),
             h('td', {}, parseAngle(b.alt)),
             h('td', {}, parseAngle(b.az)),
