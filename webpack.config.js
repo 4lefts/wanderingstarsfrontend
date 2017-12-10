@@ -1,12 +1,13 @@
 const path = require('path')
 const extractPlugin = require('extract-text-webpack-plugin')
+const htmlPlugin = require('html-webpack-plugin')
 
 module.exports = {
 	entry: './src/index.js',
 	output: {
 		filename: 'app.js',
 		path: path.resolve(__dirname, 'build'),
-		publicPath: 'build'
+		publicPath: '/'
 	},
 	module: {
 		rules: [
@@ -30,6 +31,11 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new extractPlugin({filename: 'style.css'})
+		new extractPlugin({filename: 'style.css'}),
+		new htmlPlugin({
+			template: './src/index.html',
+			inject: 'body'
+
+		})
 	]
 }

@@ -68,12 +68,11 @@ function initFormValues(loc, form){
 locationForm.addEventListener('submit', event => {
     clearInterval(dataGetter)
     render(loadingView, null)
-    location = {
+    const loc = {
         lat: event.target[0].value,
         long: event.target[1].value
     }
-    query = makeQuery(location)
-    dataGetter = setInterval(getData, 1000, query)
+   dataGetter = setInterval(getData, 1000, loc)
     event.preventDefault()
 })
 

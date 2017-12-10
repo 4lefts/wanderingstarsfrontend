@@ -1,6 +1,5 @@
-.DS_Store
 node_modules/
+build
 npm-debug.log*
 .vscode
-build/app.js
-build/style.css
+.DS_Store

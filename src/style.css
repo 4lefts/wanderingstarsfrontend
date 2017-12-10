@@ -56,6 +56,7 @@ input{
   color: firebrick;
   border: none;
   outline: none;
+  box-shadow: none;
   border-bottom: 1px solid darkred;
   line-height: 2em;
   padding-top: 7px;
@@ -73,6 +74,17 @@ input:hover, input:active, input:focus{
   cursor: pointer;
   border-color: firebrick;
   border-width: 1.4px;
+}
+
+/* turn off number spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance:textfield;
 }
 
 table{
