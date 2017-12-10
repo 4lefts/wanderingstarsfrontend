@@ -1,49 +1,48 @@
 import {render, loadingView, errView, dataView} from './renderdom.js'
+import './style.css'
 
 //--------
 //global vars
-let location = {
-    lat: null,
-    long: null
-}
-let query
 let dataGetter 
 const locationForm = document.getElementById('location-form')
 
 //--------
 //geolocation
-function getLocation(callback){
+const getLocation = new Promise(function(resolve, reject){
+    let loc = {}
     if(navigator.geolocation){
-       navigator.geolocation.getCurrentPosition(pos => {
-            location.lat = pos.coords.latitude.toFixed(2).toString()
-            location.long = pos.coords.longitude.toFixed(2).toString()
-            callback()
+        navigator.geolocation.getCurrentPosition(pos => {
+            loc = {
+                lat: pos.coords.latitude.toFixed(2).toString(),
+                long: pos.coords.longitude.toFixed(2).toString()
+            }
+            resolve(loc)
         }, err => {
-            console.log(err)
+            loc = defaultLocation()
+            console.log(`geolocation error: ${err}`)
+            resolve(loc)
         })
     } else {
-        location = {
+        loc = defaultLocation()
+        console.log(`geolocation not supported or disabled...`)
+        resolve(loc)
+    }
+    function defaultLocation(){
+        return {
             lat: '50.7',
             long: '-3.5'
         }
-        callback()
     }
-}
-getLocation(function(){
-    query = makeQuery(location)
-    dataGetter = setInterval(getData, 1000, query)
-    initFormValues(location, locationForm)
 })
 
-//--------
-//fetch data
-function makeQuery(loc){
-    console.log(loc)
-    console.log(loc.lat)
-    return `https://4lefts.pythonanywhere.com/api/${loc.lat}/${loc.long}`
-}
-function getData(qry){
-    fetch(qry)
+getLocation
+    .then(loc => {
+        dataGetter = setInterval(getData, 1000, loc)
+        initFormValues(loc, locationForm)
+    })
+
+function getData(loc){
+    fetch(`https://4lefts.pythonanywhere.com/api/${loc.lat}/${loc.long}`)
         .then(response => {
             if(response.ok){
                 return response.json()
