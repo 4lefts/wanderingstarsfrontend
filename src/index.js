@@ -28,18 +28,13 @@ const getLocation = new Promise(function(resolve, reject){
         resolve(loc)
     }
     function defaultLocation(){
+        //default to exeter
         return {
             lat: '50.7',
             long: '-3.5'
         }
     }
 })
-
-getLocation
-    .then(loc => {
-        dataGetter = setInterval(getData, 1000, loc)
-        initFormValues(loc, locationForm)
-    })
 
 function getData(loc){
     fetch(`https://4lefts.pythonanywhere.com/api/${loc.lat}/${loc.long}`)
@@ -75,6 +70,13 @@ locationForm.addEventListener('submit', event => {
    dataGetter = setInterval(getData, 1000, loc)
     event.preventDefault()
 })
+
+//initialise location, start getting data
+getLocation
+    .then(loc => {
+        dataGetter = setInterval(getData, 1000, loc)
+        initFormValues(loc, locationForm)
+    })
 
 //initial render
 render(loadingView, null)
