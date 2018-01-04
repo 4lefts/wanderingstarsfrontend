@@ -1,4 +1,5 @@
 import {render, loadingView, errView, dataView} from './renderdom.js'
+import {renderSky} from './visualiser.js'
 import './style.css'
 
 //--------
@@ -47,7 +48,10 @@ function getData(loc){
             }
         })
         .then(data => {
-            if(data) render(dataView, data)
+            if(data){
+                render(dataView, data)
+                renderSky(data.bodies)
+            }
         })
         .catch(err => render(errView, err))
 }
