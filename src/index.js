@@ -38,7 +38,7 @@ const getLocation = new Promise(function(resolve, reject){
 })
 
 function getData(loc){
-    fetch(`https://4lefts.pythonanywhere.com/api/${loc.lat}/${loc.long}`)
+    fetch(`http://www.wanderingstars.co/api/${loc.lat}/${loc.long}`)
         .then(response => {
             if(response.ok){
                 return response.json()
