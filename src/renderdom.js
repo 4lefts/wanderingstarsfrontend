@@ -16,7 +16,6 @@ function loadingView(state){
 }
 
 function errView(state){
-    console.log(state)
     return (h('div', {class: 'errorBox'}, [
         h('h3', {}, `Error:${state}`),
         h('p', {}, 'sorry, something went wrong, please try again')

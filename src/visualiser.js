@@ -9,14 +9,12 @@ let xPadding = parseInt(window.getComputedStyle(container)
                     .padding
                     .split(' ')[1]
                     .split('px')[0])
-console.log(xPadding)
 let sz
 
 function renderSky(data){
     const filteredData = data.filter(body => body.hasOwnProperty('set'))
     const cartesianData = makeCartesian(filteredData)
     const sz = container.offsetWidth - (2 * xPadding)
-    console.log(cartesianData)
     patch(node, (node = skyView(cartesianData, sz)), container)
 }
 

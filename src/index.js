@@ -20,12 +20,12 @@ const getLocation = new Promise(function(resolve, reject){
             resolve(loc)
         }, err => {
             loc = defaultLocation()
-            console.log(`geolocation error: ${err}`)
+            console.error(`geolocation error: ${err}`)
             resolve(loc)
         })
     } else {
         loc = defaultLocation()
-        console.log(`geolocation not supported or disabled...`)
+        console.error(`geolocation not supported or disabled...`)
         resolve(loc)
     }
     function defaultLocation(){
@@ -43,7 +43,6 @@ function getData(loc){
             if(response.ok){
                 return response.json()
             } else {
-                console.log(response)
                 render(errView, response.status)
             }
         })
