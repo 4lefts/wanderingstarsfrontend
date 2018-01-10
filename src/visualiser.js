@@ -19,6 +19,17 @@ function renderSky(data){
 }
 
 function skyView(state, size){
+    const drawCompassPoint = (letter, x, y) => {
+        return(
+            h('text', {
+                "x": x,
+                "y": y,
+                "stroke": "none",
+                "fill": "firebrick",
+                "font-family": "'Fira Mono', monospace",
+            }, letter)
+        )
+    }
     return h('svg', {
         "xmlns":  "http://www.w3.org/2000/svg", 
         "height":  size, 
@@ -31,6 +42,10 @@ function skyView(state, size){
             "stroke": "none",
             "fill": "#010125",
         }),
+        drawCompassPoint('N', -4, (-(size/2) + 20)),
+        drawCompassPoint('S', -4, (size/2) - 10),
+        drawCompassPoint('E', (size/2) - 20, 10),
+        drawCompassPoint('W', (-(size/2) + 10), 10),
         state.map((b, idx) => {
             const x1 = b.x * size / 4
             const x2 = b.x * size / 2
@@ -62,6 +77,7 @@ function skyView(state, size){
                 "r": "5",
                 "stroke": "none",
                 "fill": "firebrick",
+                "opacity": 0.7,
             }))            
         })
     ])
