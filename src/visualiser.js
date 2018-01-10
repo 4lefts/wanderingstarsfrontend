@@ -5,10 +5,7 @@ export { renderSky }
 //picodom stuff
 let node
 let container = document.getElementById('sky-container')
-let xPadding = parseInt(window.getComputedStyle(container)
-                    .padding
-                    .split(' ')[1]
-                    .split('px')[0])
+let xPadding = 10
 let sz
 
 function renderSky(data){
