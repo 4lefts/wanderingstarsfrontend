@@ -12,5 +12,5 @@ the app is build to the dir ```static``` so that it can be dropped straight into
 ### to do:
 - ~~js navigator geolocation~~
 - ~~https - geolocation doesn't work over http...~~
-- canvas to visualise object positions
+- ~~canvas to visualise object positions~~
 - "light css" theme depending on whether the sun is up or not?
